@@ -1,3 +1,11 @@
+// ============================================
+// PORTFOLIO WEBSITE - JAVASCRIPT
+// All interactive functionality
+// ============================================
+
+// ============================================
+// 1. INITIALIZATION
+// ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
@@ -152,30 +160,20 @@ function initializeScrollAnimations() {
 // ============================================
 
 function initializeTheme() {
-    const themeToggle = document.getElementById('themeToggle');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
+    // Light mode only - theme toggle disabled
+    document.body.classList.add('light-mode');
+    localStorage.setItem('theme', 'light');
     
-    // Set initial theme
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(initialTheme === 'dark' ? 'dark' : 'light');
-
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
+    // Hide theme toggle button
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.style.display = 'none';
+    }
 }
 
 function setTheme(theme) {
-    if (theme === 'light') {
-        document.body.classList.add('light-mode');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        document.body.classList.remove('light-mode');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-    }
+    // Always set to light theme
+    document.body.classList.add('light-mode');
 }
 
 // ============================================
