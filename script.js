@@ -1,11 +1,3 @@
-// ============================================
-// PORTFOLIO WEBSITE - JAVASCRIPT
-// All interactive functionality
-// ============================================
-
-// ============================================
-// 1. INITIALIZATION
-// ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
