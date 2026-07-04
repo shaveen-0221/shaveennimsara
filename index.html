@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shaveen Nimsara - ICT Student, Software Developer & Networking Enthusiast. Professional portfolio showcasing projects, skills, and experience.">
+    <meta name="keywords" content="portfolio, ICT, software developer, networking, web development, projects">
+    <meta name="author" content="Shaveen Nimsara">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <title>Shaveen Nimsara - ICT Student & Software Developer</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles" class="particles"></div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
+    <!-- Loading Animation -->
+    <div id="loader" class="loader">
+        <div class="loader-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+        <p class="loader-text">Loading</p>
+    </div>
+    
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#home" class="logo" aria-label="Home">
+                <img src="logo.png" alt="Shaveen Nimsara logo" class="logo-image">
+            </a>
+            
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active" data-nav="home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-nav="about">About</a></li>
+                <li><a href="#education" class="nav-link" data-nav="education">Education</a></li>
+                <li><a href="#experience" class="nav-link" data-nav="experience">Experience</a></li>
+                <li><a href="#skills" class="nav-link" data-nav="skills">Skills</a></li>
+                <li><a href="#projects" class="nav-link" data-nav="projects">Projects</a></li>
+                <li><a href="#contact" class="nav-link" data-nav="contact">Contact</a></li>
+            </ul>
+            
+            <div class="nav-extras">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            <span class="typing-text"></span>
+                            <span class="cursor-blink"></span>
+                        </h1>
+                        <p class="hero-title-alt">Shaveen Nimsara</p>
+                        <p class="hero-subtitle">ICT Student | Software Developer | Networking Enthusiast</p>
+                        <p class="hero-description">
+                            Passionate ICT student specializing in software development, networking, and IT support. Always eager to learn new technologies and build innovative solutions.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#contact" class="btn btn-primary">
+                                <i class="fas fa-envelope"></i> Contact Me
+                            </a>
+                            <a href="https://github.com/shaveen-0221" target="_blank" class="btn btn-secondary">
+                                <i class="fas fa-code"></i> View GitHub
+                            </a>
+                        </div>
+                        <div class="hero-socials">
+                            <a href="https://www.linkedin.com/in/shaveen0221" target="_blank" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="https://github.com/shaveen-0221" target="_blank" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="mailto:shavee21nimsara@gmail.com" aria-label="Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="image-wrapper">
+                            <img src="profile-image.jpg" alt="Shaveen Nimsara" class="profile-image">
+                            <div class="image-border"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-indicator">
+                    <span>Scroll to explore</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="section-subtitle">Get to know me better</p>
+                </div>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p class="about-paragraph">
+                            I am <strong>Shaveen Nimsara</strong>, an enthusiastic ICT student currently following <strong>NVQ Level 5 in ICT</strong> at the National Vocational Training Institute. I completed <strong>NVQ Level 4 in ICT</strong> at CIA Computer Institute.
+                        </p>
+                        <p class="about-paragraph">
+                            I am passionate about software development, networking, database systems, and IT support. I enjoy solving real-world problems through technology and continuously improving my skills. With a strong foundation in both theoretical knowledge and practical experience, I'm committed to building a career in the ICT field.
+                        </p>
+                        <div class="about-stats">
+                            <div class="stat">
+                                <div class="stat-number" data-target="15">0</div>
+                                <div class="stat-label">Projects Completed</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" data-target="2">0</div>
+                                <div class="stat-label">Years Experience</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" data-target="8">0</div>
+                                <div class="stat-label">Technologies</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-strengths">
+                        <h3>Core Strengths</h3>
+                        <div class="strengths-grid">
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <h4>Fast Learner</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h4>Team Player</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h4>Problem Solver</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <h4>Self Motivated</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <h4>Good Communication</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h4>Time Management</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h4>Hardworking</h4>
+                            </div>
+                            <div class="strength-card">
+                                <div class="strength-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <h4>Creative</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Education Timeline -->
+        <section id="education" class="education">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Education</h2>
+                    <p class="section-subtitle">My learning journey</p>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item" data-aos="fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3>NVQ Level 05 in ICT</h3>
+                                <span class="timeline-year">2025 - Present</span>
+                            </div>
+                            <p class="timeline-institution">National Vocational Training Institute</p>
+                            <p class="timeline-description">Advanced level ICT qualification focusing on advanced programming, network administration, and database management.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3>NVQ Level 04 in ICT</h3>
+                                <span class="timeline-year">2024 - 2025</span>
+                            </div>
+                            <p class="timeline-institution">CIA Computer Institute</p>
+                            <p class="timeline-description">Comprehensive ICT foundation covering programming, networking basics, database systems, and IT support.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3>GCE Advanced Level</h3>
+                                <span class="timeline-year">2023</span>
+                            </div>
+                            <p class="timeline-institution">Eheliyagoda Dharmapala National College</p>
+                            <p class="timeline-description">Physical Science stream with focus on mathematics, physics, and chemistry.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3>GCE Ordinary Level</h3>
+                                <span class="timeline-year">2020</span>
+                            </div>
+                            <p class="timeline-institution">Eheliyagoda Dharmapala National College</p>
+                            <p class="timeline-description">Completed general education with strong performance in core subjects.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section id="experience" class="experience">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Experience</h2>
+                    <p class="section-subtitle">Professional journey and roles</p>
+                </div>
+                <div class="experience-grid">
+                    <div class="experience-card" data-aos="fade-up">
+                        <div class="experience-header">
+                            <h3>ICT Support Trainee</h3>
+                            <span class="experience-duration">
+                                <i class="fas fa-calendar"></i> Sep 2024 - Mar 2025
+                            </span>
+                        </div>
+                        <p class="experience-company">
+                            <i class="fas fa-building"></i> Sri Lanka Tea Board - Ratnapura Regional Office
+                        </p>
+                        <ul class="experience-list">
+                            <li>
+                                <i class="fas fa-check"></i>
+                                Provided IT Support and technical assistance to end users
+                            </li>
+                            <li>
+                                <i class="fas fa-check"></i>
+                                Performed system maintenance and troubleshooting
+                            </li>
+                            <li>
+                                <i class="fas fa-check"></i>
+                                Handled data entry and database management tasks
+                            </li>
+                            <li>
+                                <i class="fas fa-check"></i>
+                                Gained practical experience in network administration
+                            </li>
+                            <li>
+                                <i class="fas fa-check"></i>
+                                Collaborated with IT team on infrastructure projects
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills" class="skills">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Skills & Expertise</h2>
+                    <p class="section-subtitle">Technologies and tools I work with</p>
+                </div>
+                <div class="skills-grid">
+                    <!-- Programming -->
+                    <div class="skill-category" data-aos="fade-up">
+                        <div class="category-header">
+                            <i class="fas fa-code"></i>
+                            <h3>Programming</h3>
+                        </div>
+                        <div class="skill-items">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Java</span>
+                                    <span class="skill-level">85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">JavaScript</span>
+                                    <span class="skill-level">80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">PHP</span>
+                                    <span class="skill-level">75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">VB.NET</span>
+                                    <span class="skill-level">70%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">HTML5 & CSS3</span>
+                                    <span class="skill-level">90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Database -->
+                    <div class="skill-category" data-aos="fade-up">
+                        <div class="category-header">
+                            <i class="fas fa-database"></i>
+                            <h3>Database</h3>
+                        </div>
+                        <div class="skill-items">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">MySQL</span>
+                                    <span class="skill-level">85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">SQL</span>
+                                    <span class="skill-level">80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Networking -->
+                    <div class="skill-category" data-aos="fade-up">
+                        <div class="category-header">
+                            <i class="fas fa-network-wired"></i>
+                            <h3>Networking</h3>
+                        </div>
+                        <div class="skill-items">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Network Fundamentals</span>
+                                    <span class="skill-level">80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">IT Support</span>
+                                    <span class="skill-level">85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tools & Platforms -->
+                    <div class="skill-category" data-aos="fade-up">
+                        <div class="category-header">
+                            <i class="fas fa-tools"></i>
+                            <h3>Tools & Platforms</h3>
+                        </div>
+                        <div class="skill-items">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Git & GitHub</span>
+                                    <span class="skill-level">85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">VS Code</span>
+                                    <span class="skill-level">90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Microsoft Office</span>
+                                    <span class="skill-level">88%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" style="width: 88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+        
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="section-subtitle">Let's connect and discuss opportunities</p>
+                </div>
+                <div class="contact-wrapper">
+                    <div class="contact-info">
+                        <div class="contact-item" data-aos="fade-up">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Phone</h3>
+                                <a href="tel:+94769200457">+94 76 9200457</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item" data-aos="fade-up">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <a href="mailto:shavee21nimsara@gmail.com">shavee21nimsara@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item" data-aos="fade-up">
+                            <div class="contact-icon">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>LinkedIn</h3>
+                                <a href="https://www.linkedin.com/in/shaveen0221" target="_blank">linkedin.com/in/shaveen0221</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item" data-aos="fade-up">
+                            <div class="contact-icon">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>GitHub</h3>
+                                <a href="https://github.com/shaveen-0221" target="_blank">github.com/shaveen-0221</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item" data-aos="fade-up">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Address</h3>
+                                <p>65/A, Ihalagama<br>Ellawala, Eheliyagoda<br>Sri Lanka</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form class="contact-form" id="contactForm" novalidate>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required aria-required="true">
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required aria-required="true">
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required aria-required="true">
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="6" required aria-required="true"></textarea>
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <span class="btn-text">Send Message</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        
+                        <div class="form-message" id="formMessage"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Shaveen Nimsara. Designed & Developed by Shaveen Nimsara. All Rights Reserved.</p>
+                <div class="footer-socials">
+                    <a href="https://www.linkedin.com/in/shaveen0221" target="_blank" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/shaveen-0221" target="_blank" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="mailto:shavee21nimsara@gmail.com" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
