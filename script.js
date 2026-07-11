@@ -1,569 +1,456 @@
-// ============================================
-// PORTFOLIO WEBSITE - JAVASCRIPT
-// All interactive functionality
-// ============================================
 
-// ============================================
-// 1. INITIALIZATION
-// ============================================
+'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
+/* ═══════════════════════════════════════════
+   1. LOADER
+═══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+  }, 1900);
 });
 
-function initializeApp() {
-    removeLoadingAnimation();
-    initializeParticles();
-    initializeNavigation();
-    initializeScrollAnimations();
-    initializeTheme();
-    initializeTypingEffect();
-    initializeCounters();
-    initializeForm();
-    initializeCustomCursor();
-    initializeScrollToTop();
-}
+/* ═══════════════════════════════════════════
+   2. PARTICLE CANVAS
+═══════════════════════════════════════════ */
+(function initParticles() {
+  const canvas = document.getElementById('particleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
-// ============================================
-// 2. LOADING ANIMATION
-// ============================================
+  let particles = [];
+  let width, height;
+  const PARTICLE_COUNT = 80;
 
-function removeLoadingAnimation() {
-    const loader = document.getElementById('loader');
-    setTimeout(() => {
-        loader.classList.add('hidden');
-    }, 1500);
-}
+  function resize() {
+    width  = canvas.width  = canvas.offsetWidth;
+    height = canvas.height = canvas.offsetHeight;
+  }
 
-// ============================================
-// 3. PARTICLE BACKGROUND
-// ============================================
+  function rand(a, b) { return a + Math.random() * (b - a); }
 
-function initializeParticles() {
-    const particlesContainer = document.getElementById('particles');
-    const particleCount = 30;
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        const size = Math.random() * 100 + 20;
-        const duration = Math.random() * 20 + 10;
-        const delay = Math.random() * 5;
-        const left = Math.random() * 100;
-        
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        particle.style.left = left + '%';
-        particle.style.top = '-100px';
-        particle.style.animationDuration = duration + 's';
-        particle.style.animationDelay = delay + 's';
-        
-        particlesContainer.appendChild(particle);
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x  = rand(0, width);
+      this.y  = rand(0, height);
+      this.r  = rand(1, 2.5);
+      this.vx = rand(-0.3, 0.3);
+      this.vy = rand(-0.5, -0.15);
+      this.alpha = rand(0.2, 0.7);
+      this.color = Math.random() > 0.5 ? '0,194,255' : '124,58,237';
     }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.alpha -= 0.0015;
+      if (this.y < -10 || this.alpha <= 0) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle());
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, width, height);
+    // Draw connecting lines between nearby particles
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 90) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0,194,255,${0.06 * (1 - dist / 90)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+      particles[i].update();
+      particles[i].draw();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  loop();
+})();
+
+/* ═══════════════════════════════════════════
+   3. CUSTOM CURSOR
+═══════════════════════════════════════════ */
+(function initCursor() {
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left  = mx + 'px';
+    dot.style.top   = my + 'px';
+  });
+
+  // Smooth ring lag
+  (function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  // Hover effect on interactive elements
+  const hoverTargets = 'a, button, input, textarea, [tabindex]';
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(hoverTargets)) ring.classList.add('hovered');
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(hoverTargets)) ring.classList.remove('hovered');
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   4. TYPING EFFECT
+═══════════════════════════════════════════ */
+(function initTyping() {
+  const el = document.getElementById('typingText');
+  if (!el) return;
+
+  const phrases = [
+    'Software Developer',
+    'Networking Enthusiast',
+    'Problem Solver',
+    'Graphics Designer',
+
+  ];
+
+  let phraseIdx = 0, charIdx = 0, deleting = false;
+
+  function type() {
+    const current = phrases[phraseIdx];
+
+    if (!deleting) {
+      el.textContent = current.slice(0, ++charIdx);
+      if (charIdx === current.length) {
+        deleting = true;
+        setTimeout(type, 1800);
+        return;
+      }
+      setTimeout(type, 80);
+    } else {
+      el.textContent = current.slice(0, --charIdx);
+      if (charIdx === 0) {
+        deleting = false;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        setTimeout(type, 350);
+        return;
+      }
+      setTimeout(type, 45);
+    }
+  }
+
+  // Start after loader
+  setTimeout(type, 2100);
+})();
+
+/* ═══════════════════════════════════════════
+   5. ANIMATED COUNTERS
+═══════════════════════════════════════════ */
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target, 10);
+  const duration = 1500;
+  const step = target / (duration / 16);
+  let current = 0;
+
+  const update = () => {
+    current = Math.min(current + step, target);
+    el.textContent = Math.floor(current);
+    if (current < target) requestAnimationFrame(update);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(update);
 }
 
-// ============================================
-// 4. NAVIGATION
-// ============================================
+/* ═══════════════════════════════════════════
+   6. SKILL BARS
+═══════════════════════════════════════════ */
+function animateSkillBars(container) {
+  container.querySelectorAll('.skill-fill').forEach(fill => {
+    fill.style.width = fill.dataset.width + '%';
+  });
+}
 
-function initializeNavigation() {
-    const navToggle = document.getElementById('navToggle');
-    const navMenu = document.getElementById('navMenu');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const navbar = document.getElementById('navbar');
+/* ═══════════════════════════════════════════
+   7. SCROLL REVEAL + INTERSECTION OBSERVER
+═══════════════════════════════════════════ */
+(function initReveal() {
+  const countersDone = new Set();
+  const skillsDone   = new Set();
 
-    // Toggle Mobile Menu
-    navToggle.addEventListener('click', () => {
-        navToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.classList.add('visible');
+      revealObserver.unobserve(el);
     });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
 
-    // Close menu when link clicked
+  // Hero stats counter observer
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (countersDone.has(el)) return;
+      countersDone.add(el);
+      animateCounter(el);
+      counterObserver.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+
+  // Skill bars observer
+  const skillsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (skillsDone.has(el)) return;
+      skillsDone.add(el);
+      animateSkillBars(el);
+      skillsObserver.unobserve(el);
+    });
+  }, { threshold: 0.3 });
+
+  // Stagger reveal for grid children
+  document.querySelectorAll('.strengths-grid, .projects-grid, .certs-grid').forEach(grid => {
+    grid.querySelectorAll('.reveal').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 0.08}s`;
+    });
+  });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.stat-num').forEach(el => counterObserver.observe(el));
+  document.querySelectorAll('.skills-category').forEach(el => skillsObserver.observe(el));
+})();
+
+/* ═══════════════════════════════════════════
+   8. STICKY NAVBAR + ACTIVE LINK
+═══════════════════════════════════════════ */
+(function initNavbar() {
+  const navbar   = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section[id]');
+
+  function updateNavbar() {
+    if (window.scrollY > 40) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+  }
+
+  function updateActiveLink() {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY + 80 >= sec.offsetTop) current = sec.id;
+    });
     navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            navToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            updateActiveNavLink(link);
-        });
+      link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
     });
+  }
 
-    // Update navbar on scroll
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+  window.addEventListener('scroll', () => {
+    updateNavbar();
+    updateActiveLink();
+  }, { passive: true });
+
+  updateNavbar();
+  updateActiveLink();
+})();
+
+/* ═══════════════════════════════════════════
+   9. HAMBURGER / MOBILE MENU
+═══════════════════════════════════════════ */
+(function initHamburger() {
+  const btn   = document.getElementById('hamburger');
+  const links = document.getElementById('navLinks');
+  if (!btn || !links) return;
+
+  btn.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+  });
+
+  links.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      links.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', false);
     });
+  });
 
-    // Smooth scroll and update active link
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
-}
-
-function updateActiveNavLink(activeLink) {
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => link.classList.remove('active'));
-    activeLink.classList.add('active');
-}
-
-// ============================================
-// 5. SCROLL ANIMATIONS (Intersection Observer)
-// ============================================
-
-function initializeScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('aos-animate');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('[data-aos]').forEach(el => {
-        observer.observe(el);
-    });
-
-    // Animate skill bars on scroll
-    const skillBars = document.querySelectorAll('.skill-fill');
-    const skillObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const width = entry.target.style.width;
-                entry.target.style.width = '0';
-                setTimeout(() => {
-                    entry.target.style.width = width;
-                }, 100);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    skillBars.forEach(bar => skillObserver.observe(bar));
-}
-
-// ============================================
-// 6. THEME TOGGLE (Dark/Light Mode)
-// ============================================
-
-function initializeTheme() {
-    // Light mode only - theme toggle disabled
-    document.body.classList.add('light-mode');
-    localStorage.setItem('theme', 'light');
-    
-    // Hide theme toggle button
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.style.display = 'none';
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if (!btn.contains(e.target) && !links.contains(e.target)) {
+      links.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', false);
     }
-}
+  });
+})();
 
-function setTheme(theme) {
-    // Always set to light theme
-    document.body.classList.add('light-mode');
-}
+/* ═══════════════════════════════════════════
+   10. SCROLL-TO-TOP BUTTON
+═══════════════════════════════════════════ */
+(function initScrollTop() {
+  const btn = document.getElementById('scrollTop');
+  if (!btn) return;
 
-// ============================================
-// 7. TYPING EFFECT
-// ============================================
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 500);
+  }, { passive: true });
 
-function initializeTypingEffect() {
-    const typingText = document.querySelector('.typing-text');
-    if (!typingText) return;
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
 
-    const phrases = [
-        'Creative Developer',
-        'Problem Solver',
-        'Tech Enthusiast',
-        'Software Developer'
-    ];
-    
-    let currentPhrase = 0;
-    let currentChar = 0;
-    let isDeleting = false;
-    const typingSpeed = 100;
-    const deletingSpeed = 50;
-    const pauseDuration = 2000;
+/* ═══════════════════════════════════════════
+   12. CONTACT FORM
+═══════════════════════════════════════════ */
+(function initContactForm() {
+  const form    = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+  const submitBtn = document.getElementById('submitBtn');
+  if (!form) return;
 
-    function type() {
-        const phrase = phrases[currentPhrase];
-        
-        if (isDeleting) {
-            currentChar--;
-        } else {
-            currentChar++;
-        }
+  const fields = {
+    fname:    { el: document.getElementById('fname'),    err: document.getElementById('fnameError'),    validate: v => v.trim().length >= 2 ? '' : 'Please enter your full name (min 2 characters).' },
+    femail:   { el: document.getElementById('femail'),   err: document.getElementById('femailError'),   validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Please enter a valid email address.' },
+    fsubject: { el: document.getElementById('fsubject'), err: document.getElementById('fsubjectError'), validate: v => v.trim().length >= 3 ? '' : 'Please enter a subject (min 3 characters).' },
+    fmessage: { el: document.getElementById('fmessage'), err: document.getElementById('fmessageError'), validate: v => v.trim().length >= 10 ? '' : 'Your message should be at least 10 characters.' }
+  };
 
-        typingText.textContent = phrase.substring(0, currentChar);
-
-        if (!isDeleting && currentChar === phrase.length) {
-            isDeleting = true;
-            setTimeout(type, pauseDuration);
-            return;
-        }
-
-        if (isDeleting && currentChar === 0) {
-            isDeleting = false;
-            currentPhrase = (currentPhrase + 1) % phrases.length;
-            setTimeout(type, 500);
-            return;
-        }
-
-        const speed = isDeleting ? deletingSpeed : typingSpeed;
-        setTimeout(type, speed);
-    }
-
-    type();
-}
-
-// ============================================
-// 8. ANIMATED COUNTERS
-// ============================================
-
-function initializeCounters() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                counterObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    statNumbers.forEach(stat => counterObserver.observe(stat));
-}
-
-function animateCounter(element) {
-    const target = parseInt(element.dataset.target);
-    const duration = 1500;
-    const increment = target / (duration / 16);
-    let current = 0;
-
-    const counter = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target;
-            clearInterval(counter);
-        } else {
-            element.textContent = Math.floor(current);
-        }
-    }, 16);
-}
-
-// ============================================
-// 9. CUSTOM CURSOR
-// ============================================
-
-function initializeCustomCursor() {
-    const cursor = document.querySelector('.cursor');
-    const cursorFollower = document.querySelector('.cursor-follower');
-
-    if (!cursor || !cursorFollower) return;
-
-    let cursorX = 0;
-    let cursorY = 0;
-    let followerX = 0;
-    let followerY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        cursorX = e.clientX;
-        cursorY = e.clientY;
-
-        cursor.style.left = cursorX - 10 + 'px';
-        cursor.style.top = cursorY - 10 + 'px';
+  // Live validation
+  Object.values(fields).forEach(({ el, err, validate }) => {
+    if (!el) return;
+    el.addEventListener('blur', () => {
+      const msg = validate(el.value);
+      err.textContent = msg;
+      el.style.borderColor = msg ? '#F87171' : '';
     });
-
-    // Smooth follower animation
-    function animateFollower() {
-        followerX += (cursorX - followerX) * 0.3;
-        followerY += (cursorY - followerY) * 0.3;
-
-        cursorFollower.style.left = followerX + 'px';
-        cursorFollower.style.top = followerY + 'px';
-
-        requestAnimationFrame(animateFollower);
-    }
-
-    animateFollower();
-
-    // Change cursor on hover
-    const interactiveElements = document.querySelectorAll('a, button, input, textarea');
-    interactiveElements.forEach(element => {
-        element.addEventListener('mouseenter', () => {
-            cursor.style.borderColor = 'var(--secondary-color)';
-            cursorFollower.style.background = 'var(--secondary-color)';
-        });
-        element.addEventListener('mouseleave', () => {
-            cursor.style.borderColor = 'var(--primary-color)';
-            cursorFollower.style.background = 'var(--primary-color)';
-        });
+    el.addEventListener('input', () => {
+      if (err.textContent) {
+        const msg = validate(el.value);
+        err.textContent = msg;
+        el.style.borderColor = msg ? '#F87171' : '';
+      }
     });
-}
+  });
 
-// ============================================
-// 10. SCROLL TO TOP BUTTON
-// ============================================
-
-function initializeScrollToTop() {
-    const scrollToTopBtn = document.getElementById('scrollToTop');
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            scrollToTopBtn.classList.add('show');
-        } else {
-            scrollToTopBtn.classList.remove('show');
-        }
-    });
-
-    scrollToTopBtn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-}
-
-// ============================================
-// 11. CONTACT FORM HANDLING
-// ============================================
-
-function initializeForm() {
-    const contactForm = document.getElementById('contactForm');
-    if (!contactForm) return;
-
-    contactForm.addEventListener('submit', handleFormSubmit);
-
-    // Add input validation on change
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('change', () => validateField(input));
-    });
-}
-
-function handleFormSubmit(e) {
+  form.addEventListener('submit', e => {
     e.preventDefault();
 
-    const form = e.target;
-    const inputs = form.querySelectorAll('input, textarea');
-    let isValid = true;
-
-    // Validate all fields
-    inputs.forEach(input => {
-        if (!validateField(input)) {
-            isValid = false;
-        }
+    let valid = true;
+    Object.values(fields).forEach(({ el, err, validate }) => {
+      if (!el) return;
+      const msg = validate(el.value);
+      err.textContent = msg;
+      el.style.borderColor = msg ? '#F87171' : '';
+      if (msg) valid = false;
     });
 
-    if (!isValid) return;
+    if (!valid) return;
 
-    // Simulate form submission
-    const submitBtn = form.querySelector('.btn-submit');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    // Simulate async send
+    submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
-    // Simulate API call
     setTimeout(() => {
-        showFormMessage('Thank you! Your message has been sent successfully.', 'success');
-        form.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      form.reset();
+      Object.values(fields).forEach(({ el }) => { if (el) el.style.borderColor = ''; });
+      success.classList.add('visible');
+      setTimeout(() => success.classList.remove('visible'), 5000);
+    }, 1600);
+  });
+})();
 
-        // Clear message after 5 seconds
-        setTimeout(() => {
-            document.getElementById('formMessage').style.display = 'none';
-        }, 5000);
-    }, 1500);
-}
-
-function validateField(field) {
-    const parent = field.closest('.form-group');
-    const errorMessage = parent.querySelector('.error-message');
-    let isValid = true;
-    let message = '';
-
-    if (field.value.trim() === '') {
-        isValid = false;
-        message = 'This field is required';
-    } else if (field.name === 'email') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(field.value)) {
-            isValid = false;
-            message = 'Please enter a valid email';
-        }
-    } else if (field.name === 'message' && field.value.length < 10) {
-        isValid = false;
-        message = 'Message must be at least 10 characters';
+/* ═══════════════════════════════════════════
+   13. SMOOTH SCROLL FOR ANCHOR LINKS
+═══════════════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
     }
-
-    if (isValid) {
-        parent.classList.remove('error');
-    } else {
-        parent.classList.add('error');
-        errorMessage.textContent = message;
-    }
-
-    return isValid;
-}
-
-function showFormMessage(message, type) {
-    const messageEl = document.getElementById('formMessage');
-    messageEl.textContent = message;
-    messageEl.className = 'form-message ' + type;
-    messageEl.style.display = 'block';
-}
-
-// ============================================
-// 12. PAGE TRANSITION ANIMATION
-// ============================================
-
-window.addEventListener('beforeunload', () => {
-    document.body.style.opacity = '0.7';
+  });
 });
 
-// ============================================
-// 13. KEYBOARD SHORTCUTS
-// ============================================
-
-document.addEventListener('keydown', (e) => {
-    // Home key - scroll to top
-    if (e.key === 'Home') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // End key - scroll to bottom
-    if (e.key === 'End') {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
-
-    // Ctrl/Cmd + / - toggle dark mode
-    if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-        e.preventDefault();
-        document.getElementById('themeToggle').click();
-    }
+/* ═══════════════════════════════════════════
+   14. TIMELINE STAGGER ANIMATION
+═══════════════════════════════════════════ */
+document.querySelectorAll('.timeline-item.reveal').forEach((item, i) => {
+  item.style.transitionDelay = `${i * 0.12}s`;
 });
 
-// ============================================
-// 14. ACCESSIBILITY IMPROVEMENTS
-// ============================================
-
-// Add keyboard navigation support
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
-        document.body.classList.add('keyboard-nav');
-    }
+/* ═══════════════════════════════════════════
+   15. EXPERIENCE RESPONSIBILITIES STAGGER
+═══════════════════════════════════════════ */
+document.querySelectorAll('.exp-responsibilities li').forEach((li, i) => {
+  li.style.opacity = '0';
+  li.style.transform = 'translateX(-20px)';
+  li.style.transition = `opacity 0.5s ease ${0.3 + i * 0.1}s, transform 0.5s ease ${0.3 + i * 0.1}s`;
 });
 
-document.addEventListener('mousedown', () => {
-    document.body.classList.remove('keyboard-nav');
-});
-
-// ============================================
-// 15. PERFORMANCE OPTIMIZATION
-// ============================================
-
-// Lazy load images
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-                }
-                imageObserver.unobserve(img);
-            }
-        });
+const expObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.exp-responsibilities li').forEach(li => {
+      li.style.opacity = '1';
+      li.style.transform = 'none';
     });
+    expObserver.unobserve(entry.target);
+  });
+}, { threshold: 0.3 });
 
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
-}
+document.querySelectorAll('.exp-card').forEach(c => expObserver.observe(c));
 
-// Debounce function for scroll events
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// ============================================
-// 16. ERROR HANDLING
-// ============================================
-
-window.addEventListener('error', (event) => {
-    console.error('An error occurred:', event.error);
+/* ═══════════════════════════════════════════
+   16. PROJECT CARD TILT
+═══════════════════════════════════════════ */
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width  - 0.5;
+    const y = (e.clientY - rect.top)  / rect.height - 0.5;
+    card.style.transform = `translateY(-8px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+    card.style.transition = 'transform 0.1s linear';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform 0.4s var(--ease, ease)';
+  });
 });
 
-// ============================================
-// 17. SERVICE WORKER (Optional PWA Support)
-// ============================================
-
-if ('serviceWorker' in navigator) {
-    // window.addEventListener('load', () => {
-    //     navigator.serviceWorker.register('/sw.js');
-    // });
-}
-
-// ============================================
-// 18. MOBILE MENU FIX
-// ============================================
-
-// Close mobile menu when resizing to desktop
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-        document.getElementById('navToggle').classList.remove('active');
-        document.getElementById('navMenu').classList.remove('active');
-    }
+/* ═══════════════════════════════════════════
+   17. NAVBAR LOGO CLICK → SMOOTH TOP
+═══════════════════════════════════════════ */
+document.querySelector('.nav-logo')?.addEventListener('click', e => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-
-// ============================================
-// 19. PRINT FRIENDLY IMPROVEMENTS
-// ============================================
-
-// Hide unnecessary elements before printing
-window.addEventListener('beforeprint', () => {
-    document.querySelectorAll('.no-print').forEach(el => {
-        el.style.display = 'none';
-    });
-});
-
-window.addEventListener('afterprint', () => {
-    document.querySelectorAll('.no-print').forEach(el => {
-        el.style.display = '';
-    });
-});
-
-// ============================================
-// 20. CONSOLE MESSAGE
-// ============================================
-
-console.log('%c👋 Welcome to Shaveen Nimsara\'s Portfolio!', 
-    'font-size: 20px; color: #00C2FF; font-weight: bold;');
-console.log('%cBuilt with HTML, CSS & JavaScript ✨', 
-    'font-size: 14px; color: #7C3AED;');
-console.log('%cFeel free to explore and get in touch!', 
-    'font-size: 12px; color: #a0a0a0;');
