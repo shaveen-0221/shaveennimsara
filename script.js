@@ -454,3 +454,45 @@ document.querySelector('.nav-logo')?.addEventListener('click', e => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+/*============================================
+   18. send message
+==============================================*/
+document.getElementById('contactForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const successMsg = document.getElementById('formSuccess');
+
+  const name = document.getElementById('fname').value.trim();
+  const email = document.getElementById('femail').value.trim();
+  const subject = document.getElementById('fsubject').value.trim();
+  const message = document.getElementById('fmessage').value.trim();
+
+  // simple validation
+  let valid = true;
+  const fields = [
+    { value: name, error: 'fnameError', msg: 'Please enter your name' },
+    { value: email, error: 'femailError', msg: 'Please enter a valid email' },
+    { value: subject, error: 'fsubjectError', msg: 'Please enter a subject' },
+    { value: message, error: 'fmessageError', msg: 'Please enter a message' },
+  ];
+
+  fields.forEach(f => {
+    const errorEl = document.getElementById(f.error);
+    errorEl.textContent = f.value ? '' : f.msg;
+    if (!f.value) valid = false;
+  });
+
+  if (!valid) return;
+
+  const to = 'shavee21nimsara@gmail.com';
+  const mailSubject = encodeURIComponent(`${subject} — message from ${name}`);
+  const mailBody = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+  );
+
+  window.location.href = `mailto:${to}?subject=${mailSubject}&body=${mailBody}`;
+
+  form.reset();
+  successMsg.style.display = 'block';
+});
