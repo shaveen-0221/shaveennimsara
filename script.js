@@ -457,42 +457,53 @@ document.querySelector('.nav-logo')?.addEventListener('click', e => {
 /*============================================
    18. send message
 ==============================================*/
-document.getElementById('contactForm').addEventListener('submit', function (e) {
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const form = e.target;
+  const submitBtn = document.getElementById('submitBtn');
   const successMsg = document.getElementById('formSuccess');
-
-  const name = document.getElementById('fname').value.trim();
-  const email = document.getElementById('femail').value.trim();
-  const subject = document.getElementById('fsubject').value.trim();
-  const message = document.getElementById('fmessage').value.trim();
 
   // simple validation
   let valid = true;
   const fields = [
-    { value: name, error: 'fnameError', msg: 'Please enter your name' },
-    { value: email, error: 'femailError', msg: 'Please enter a valid email' },
-    { value: subject, error: 'fsubjectError', msg: 'Please enter a subject' },
-    { value: message, error: 'fmessageError', msg: 'Please enter a message' },
+    { input: 'fname', error: 'fnameError', msg: 'Please enter your name' },
+    { input: 'femail', error: 'femailError', msg: 'Please enter a valid email' },
+    { input: 'fsubject', error: 'fsubjectError', msg: 'Please enter a subject' },
+    { input: 'fmessage', error: 'fmessageError', msg: 'Please enter a message' },
   ];
 
   fields.forEach(f => {
+    const inputEl = document.getElementById(f.input);
     const errorEl = document.getElementById(f.error);
-    errorEl.textContent = f.value ? '' : f.msg;
-    if (!f.value) valid = false;
+    if (!inputEl.value.trim()) {
+      errorEl.textContent = f.msg;
+      valid = false;
+    } else {
+      errorEl.textContent = '';
+    }
   });
 
   if (!valid) return;
 
-  const to = 'shavee21nimsara@gmail.com';
-  const mailSubject = encodeURIComponent(`${subject} — message from ${name}`);
-  const mailBody = encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-  );
+  submitBtn.classList.add('loading'); // toggle your CSS to show btn-loader
 
-  window.location.href = `mailto:${to}?subject=${mailSubject}&body=${mailBody}`;
+  try {
+    const response = await fetch('https://formspree.io/f/mdaqnljn', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    });
 
-  form.reset();
-  successMsg.style.display = 'block';
+    if (response.ok) {
+      form.reset();
+      successMsg.style.display = 'block';
+    } else {
+      alert('Something went wrong. Please try again.');
+    }
+  } catch (err) {
+    alert('Network error. Please try again.');
+  } finally {
+    submitBtn.classList.remove('loading');
+  }
 });
