@@ -333,6 +333,7 @@ function animateSkillBars(container) {
   const form    = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
   const submitBtn = document.getElementById('submitBtn');
+  const recipient = 'shavee21nimsara@gmail.com';
   if (!form) return;
 
   const fields = {
@@ -373,18 +374,25 @@ function animateSkillBars(container) {
 
     if (!valid) return;
 
-    // Simulate async send
+    const name = fields.fname.el.value.trim();
+    const email = fields.femail.el.value.trim();
+    const subject = fields.fsubject.el.value.trim();
+    const message = fields.fmessage.el.value.trim();
+
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
     setTimeout(() => {
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
+      window.location.href = mailtoLink;
       form.reset();
       Object.values(fields).forEach(({ el }) => { if (el) el.style.borderColor = ''; });
       success.classList.add('visible');
       setTimeout(() => success.classList.remove('visible'), 5000);
-    }, 1600);
+    }, 200);
   });
 })();
 
@@ -453,57 +461,4 @@ document.querySelectorAll('.project-card').forEach(card => {
 document.querySelector('.nav-logo')?.addEventListener('click', e => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-/*============================================
-   18. send message
-==============================================*/
-document.getElementById('contactForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const form = e.target;
-  const submitBtn = document.getElementById('submitBtn');
-  const successMsg = document.getElementById('formSuccess');
-
-  // simple validation
-  let valid = true;
-  const fields = [
-    { input: 'fname', error: 'fnameError', msg: 'Please enter your name' },
-    { input: 'femail', error: 'femailError', msg: 'Please enter a valid email' },
-    { input: 'fsubject', error: 'fsubjectError', msg: 'Please enter a subject' },
-    { input: 'fmessage', error: 'fmessageError', msg: 'Please enter a message' },
-  ];
-
-  fields.forEach(f => {
-    const inputEl = document.getElementById(f.input);
-    const errorEl = document.getElementById(f.error);
-    if (!inputEl.value.trim()) {
-      errorEl.textContent = f.msg;
-      valid = false;
-    } else {
-      errorEl.textContent = '';
-    }
-  });
-
-  if (!valid) return;
-
-  submitBtn.classList.add('loading'); // toggle your CSS to show btn-loader
-
-  try {
-    const response = await fetch('https://formspree.io/f/mdaqnljn', {
-      method: 'POST',
-      headers: { 'Accept': 'application/json' },
-      body: new FormData(form)
-    });
-
-    if (response.ok) {
-      form.reset();
-      successMsg.style.display = 'block';
-    } else {
-      alert('Something went wrong. Please try again.');
-    }
-  } catch (err) {
-    alert('Network error. Please try again.');
-  } finally {
-    submitBtn.classList.remove('loading');
-  }
 });
