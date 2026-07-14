@@ -329,72 +329,56 @@ function animateSkillBars(container) {
 /* ═══════════════════════════════════════════
    12. CONTACT FORM
 ═══════════════════════════════════════════ */
-(function initContactForm() {
-  const form    = document.getElementById('contactForm');
-  const success = document.getElementById('formSuccess');
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const form = e.target;
   const submitBtn = document.getElementById('submitBtn');
-  const recipient = 'shavee21nimsara@gmail.com';
-  if (!form) return;
+  const successMsg = document.getElementById('formSuccess');
 
-  const fields = {
-    fname:    { el: document.getElementById('fname'),    err: document.getElementById('fnameError'),    validate: v => v.trim().length >= 2 ? '' : 'Please enter your full name (min 2 characters).' },
-    femail:   { el: document.getElementById('femail'),   err: document.getElementById('femailError'),   validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Please enter a valid email address.' },
-    fsubject: { el: document.getElementById('fsubject'), err: document.getElementById('fsubjectError'), validate: v => v.trim().length >= 3 ? '' : 'Please enter a subject (min 3 characters).' },
-    fmessage: { el: document.getElementById('fmessage'), err: document.getElementById('fmessageError'), validate: v => v.trim().length >= 10 ? '' : 'Your message should be at least 10 characters.' }
-  };
+  // simple validation
+  let valid = true;
+  const fields = [
+    { input: 'fname', error: 'fnameError', msg: 'Please enter your name' },
+    { input: 'femail', error: 'femailError', msg: 'Please enter a valid email' },
+    { input: 'fsubject', error: 'fsubjectError', msg: 'Please enter a subject' },
+    { input: 'fmessage', error: 'fmessageError', msg: 'Please enter a message' },
+  ];
 
-  // Live validation
-  Object.values(fields).forEach(({ el, err, validate }) => {
-    if (!el) return;
-    el.addEventListener('blur', () => {
-      const msg = validate(el.value);
-      err.textContent = msg;
-      el.style.borderColor = msg ? '#F87171' : '';
-    });
-    el.addEventListener('input', () => {
-      if (err.textContent) {
-        const msg = validate(el.value);
-        err.textContent = msg;
-        el.style.borderColor = msg ? '#F87171' : '';
-      }
-    });
+  fields.forEach(f => {
+    const inputEl = document.getElementById(f.input);
+    const errorEl = document.getElementById(f.error);
+    if (!inputEl.value.trim()) {
+      errorEl.textContent = f.msg;
+      valid = false;
+    } else {
+      errorEl.textContent = '';
+    }
   });
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
+  if (!valid) return;
 
-    let valid = true;
-    Object.values(fields).forEach(({ el, err, validate }) => {
-      if (!el) return;
-      const msg = validate(el.value);
-      err.textContent = msg;
-      el.style.borderColor = msg ? '#F87171' : '';
-      if (msg) valid = false;
+  submitBtn.classList.add('loading'); // toggle your CSS to show btn-loader
+
+  try {
+    const response = await fetch('https://formspree.io/f/mdaqnljn', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
     });
 
-    if (!valid) return;
-
-    const name = fields.fname.el.value.trim();
-    const email = fields.femail.el.value.trim();
-    const subject = fields.fsubject.el.value.trim();
-    const message = fields.fmessage.el.value.trim();
-
-    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
-
-    submitBtn.classList.add('loading');
-    submitBtn.disabled = true;
-
-    setTimeout(() => {
-      submitBtn.classList.remove('loading');
-      submitBtn.disabled = false;
-      window.location.href = mailtoLink;
+    if (response.ok) {
       form.reset();
-      Object.values(fields).forEach(({ el }) => { if (el) el.style.borderColor = ''; });
-      success.classList.add('visible');
-      setTimeout(() => success.classList.remove('visible'), 5000);
-    }, 200);
-  });
-})();
+      successMsg.style.display = 'block';
+    } else {
+      alert('Something went wrong. Please try again.');
+    }
+  } catch (err) {
+    alert('Network error. Please try again.');
+  } finally {
+    submitBtn.classList.remove('loading');
+  }
+});
 
 /* ═══════════════════════════════════════════
    13. SMOOTH SCROLL FOR ANCHOR LINKS
